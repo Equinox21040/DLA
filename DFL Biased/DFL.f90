@@ -3,7 +3,7 @@ program D2rw
 
     !Variables 
     integer :: x,y,flag,count,counter,n,lattice
-    real :: r1,r,rp,pi,rold,r2,bias
+    real :: r1,r,rp,pi,r2,r3,bias
     integer,dimension(:,:),allocatable :: pos
 
 
@@ -59,70 +59,53 @@ program D2rw
 
     do      
         
-        
-        
+        call random_number(r2)
 
-        rold = (x**2) + (y**2)
-        
-        !Loop for random walk
-        call random_number(r1) 
-        
-
-        if (r1<=(0.250d0)) then              !Random Walk conditions 
-
-            !Including Bias to the walk 
-            if (rold < ((x+1)**2) + (y**2)) then 
-                call random_number(r2)
-                if (r2 < bias) then 
-                    x = x - 1
-                else 
-                    x = x + 1
-                end if
-            else 
-                x = x + 1
-            end if
-
-        else if (r1 <= (0.50d0)) then 
-
-            !Including Bias to the walk 
-            if (rold < ((x-1)**2) + (y**2)) then 
-                call random_number(r2)
-                if (r2 < bias) then 
-                    x = x + 1
-                else 
-                    x = x - 1
-                end if
-            else 
-                x = x - 1
-            end if
-
-        else if (r1 <= (0.750d0)) then 
+        if (r2 > bias) then 
+         
+            !Loop for unbiased random walk
+            call random_number(r1) 
             
-            !Including Bias to the walk 
-            if (rold < (x**2) + ((y+1)**2)) then 
-                call random_number(r2)
-                if (r2 < bias) then 
-                    y = y - 1
-                else 
-                    y = y + 1
-                end if
-            else 
-                y = y + 1
-            end if
-        else 
 
-            !Including Bias to the walk
-            if (rold < (x**2) + ((y-1)**2)) then 
-                call random_number(r2)
-                if (r2 < bias) then 
-                    y = y + 1
-                else 
-                    y = y - 1
-                end if
-            else 
+            if (r1<=(0.250d0)) then              !Move to right
+                x = x + 1
+            else if (r1 <= (0.50d0)) then        !Move to left
+                x = x - 1 
+            else if (r1 <= (0.750d0)) then       !Move Up
+                y = y + 1
+            else                                 !Move down
                 y = y - 1
             end if
-        end if
+
+        else 
+            
+            !Loop fo biased random walk 
+            call random_number(r3)
+
+            if (r3 >= 0.5) then 
+                if (x > 0) then 
+                    x = x - 1
+                else if (x < 0) then
+                    x = x + 1 
+                else if (x == 0 .and. y > 0) then 
+                    y = y - 1
+                else if (x==0 .and. y < 0) then 
+                    y = y + 1
+                end if 
+            else 
+                if (y > 0) then 
+                    y = y - 1
+                else if (y < 0) then
+                    y = y + 1 
+                else if (y == 0 .and. x > 0) then 
+                    x = x - 1
+                else if (y==0 .and. x < 0) then 
+                    x = x + 1
+                end if 
+            end if 
+
+
+        end if 
 
 
 
