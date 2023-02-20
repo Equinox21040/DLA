@@ -3,7 +3,7 @@ program D2rw
 
     !Variables 
     integer :: x,y,flag,count,counter,n,lattice
-    real :: r1,r,rp,pi,r2,r3,bias
+    real :: r1,r,rp,pi,r2,r3,r4,bias,bias_s
     integer,dimension(:,:),allocatable :: pos
 
 
@@ -14,7 +14,8 @@ program D2rw
     rp = 5 * r          !Elimination boundary radius
     flag = 0            !flag if particle enters target area 
     count = 0           !how many particles entered the target area
-    bias = 1.0          !The bias alloted to random walker
+    bias = 0.0          !The bias alloted to random walker
+    bias_s = 0.3        !Sticking bias
     pi = 2*asin(1.0)
 
     allocate(pos(-int(lattice):int(lattice),-int(lattice):int(lattice))) !Creating a square lattice 
@@ -29,8 +30,9 @@ program D2rw
     do                              !Loop ends when n particles enter target zone 
         counter = 0 
         if (flag == 1) then         !particle counter
-            count = count + 1
+            count = count + 1 
             write(1,*)x,y
+           
 
             !Resizing the radius if the max distance is 80% of the radius
             if ((x**2) + (y**2) > (r**2)*0.64) then           
@@ -113,9 +115,14 @@ program D2rw
             exit
         end if
 
+        if (r4 > bias) then  !Sticking bias check
+            exit 
+        end if 
+
         !Checking for Neighbours when the particle enters the radius 
         if (((x**2) + (y**2)) < (r**2)) then
 
+        !Checking for neighbours
             if (pos(x + 1,y) == 1) then 
                 flag = 1 
                 pos(x,y) = 1
