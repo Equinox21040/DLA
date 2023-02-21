@@ -21,8 +21,8 @@ program D2rw
     !Setteing every lattice as 0 
     pos = 0
 
-    pos(0,0) = 1                    !Central lattice is 1 
-
+    pos(0,0) = 1                    !Central lattice point is 1 
+    
     open(1,file = "Output.dat")     !Output file 
     write(1,*)0,0
     do                              !Loop ends when n particles enter target zone 
@@ -32,8 +32,9 @@ program D2rw
             write(1,*)x,y
 
             !Resizing the radius if the max distance is 80% of the radius
-            if ((x**2) + (y**2) > (r**2)*0.64) then           
-                r = int(sqrt(real((x**2) + (y**2)))) + 3  
+            if ((x**2) + (y**2) >= ((r*0.8)**2)) then           
+                r = int(sqrt(real((x**2) + (y**2)))) + 3
+                write(*,*)r  
                 rp = r * 5          !Resizing Elemination Boundary
             end if 
 
@@ -69,30 +70,33 @@ program D2rw
             y = y - 1 
         end if
 
-        if (((x**2) + (y**2)) > (rp**2)) then !Checking for out of bounds condition 
+        if (((x**2) + (y**2)) >= (rp**2)) then !Checking for out of bounds condition 
             exit
         end if
 
         !Checking for Neighbours when the particle enters the radius 
         if (((x**2) + (y**2)) < (r**2)) then
 
-            if (pos(x + 1,y) == 1) then 
-                flag = 1 
-                pos(x,y) = 1
-                exit 
-            else if (pos(x - 1,y) == 1) then 
-                flag = 1 
-                pos(x,y) = 1
-                exit 
-            else if (pos(x,y + 1) == 1) then 
-                flag = 1 
-                pos(x,y) = 1
-                exit 
-            else if (pos(x,y - 1) == 1) then 
-                flag = 1 
-                pos(x,y) = 1
-                exit 
-            end if 
+            if (pos(x,y) /= 1) then 
+            
+                if (pos(x + 1,y) == 1) then 
+                    flag = 1 
+                    pos(x,y) = 1
+                    exit 
+                else if (pos(x - 1,y) == 1) then 
+                    flag = 1 
+                    pos(x,y) = 1
+                    exit 
+                else if (pos(x,y + 1) == 1) then 
+                    flag = 1 
+                    pos(x,y) = 1
+                    exit 
+                else if (pos(x,y - 1) == 1) then 
+                    flag = 1 
+                    pos(x,y) = 1
+                    exit 
+                end if 
+            end if
         end if
         
         !Extra exit condition in case of an infinite loop 

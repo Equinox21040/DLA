@@ -4,10 +4,10 @@ program FractalDim
     real :: r,dr,rmin,rmax,t,sumx,sumy,sumxy,sumxx,slope,intercept
     integer :: i,x,y,n,rbin,ibin
     real,allocatable,dimension(:) ::radii, NP           !The arrays radii, and containing the amount of points enclosed    
-    n = 3000                                            !The number of points
-    dr = 2.0                                            !The change in the radius of the circles 
+    n = 3001                                            !The number of points
+    dr = 1.0                                            !The change in the radius of the circles 
     rmin = 0                                            !The smallest possible radius
-    rmax = 60                                           !The biggest possible radius
+    rmax = 55                                           !The biggest possible radius
     sumx = 0                                            !
     sumy = 0                                            !   The constants used for 
     sumxy = 0                                           !   calculating slope and intercept
@@ -31,7 +31,7 @@ program FractalDim
 
 
 
-    open(1,file="Output.dat",status = "old")                           !The file that contains the coordinates of the points 
+    open(1,file="Output.dat")                           !The file that contains the coordinates of the points 
 
     do i = 1,n 
         read(1,*)x,y                                    !Collecting Coordinates
